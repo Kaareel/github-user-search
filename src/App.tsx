@@ -1,24 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { SearchIcon, MoonIcon, SunIcon } from "./components/Icon";
+import { useState } from "react";
 
 function App() {
+  const [bgColor, setBgColor] = useState('Light');
+  const ToggleColor = () => {
+    setBgColor(bgColor === 'Light' ? 'Dark' : 'Light');
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={`h-screen bg-${bgColor}`}>
+      <div className="flex flex-col px-6 pt-8 pb-20 ">
+        <div className="flex justify-between items-center mx-5">
+          <h1 className="text-txtHighContrast text-3xl">devfinder</h1>
+          
+          <button className="p-[2.5px]" onClick={ToggleColor}>{bgColor === 'Light' ? (<span className="flex">Dark <MoonIcon/></span>): (<span className="flex">Light <SunIcon/></span>)}</button>
+        </div>
+        <form className="flex items-center bg-Secondary p-2 mt-9 mb-4 border rounded-2xl w-full">
+          <SearchIcon />
+          <input type="text" className="w-full py-[6px]"/>
+          <button className="bg-Primary border rounded-[10px] px-4 py-3 text-white">Search</button>
+        </form>
+        <div className="bg-Secondary py-8 px-6">
+          card
+        </div>
+      </div>
     </div>
   );
 }
