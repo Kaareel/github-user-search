@@ -3,15 +3,17 @@
 @tailwind utilities;
 
 body {
-  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+h2 {
+  font-size: 1.625rem;
+  line-height: 38px;;
+  font-weight: 700;
 }
 
 * {
   font-family: 'Space Mono', monospace;
-}
-.Dark {
-  background-color: #141d2f;
-}
-.Light {
-  background-color: #f6f8ff;
 }
