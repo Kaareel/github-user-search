@@ -56,7 +56,7 @@ export const SunIcon = () => {
 
 export const IconLocate = () => {
     return (
-        <div>
+        <div className="mr-4">
             {/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
             <svg
                 xmlns="http://www.w3.org/2000/svg"

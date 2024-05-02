@@ -12,7 +12,6 @@ function Heading(props: Props) {
     return (
         <div className="flex justify-between items-center mx-5">
           <h1 className={`${props.bgColor === 'Light' ? "text-textColorLight" : "text-white"} text-3xl`}>devfinder</h1>
-          
           <button type="button" className="p-[2.5px]" onClick={ToggleColor}>{props.bgColor === 'Light' ? (<span className="flex text-txtLowContrast hover:text-black">Dark <MoonIcon/></span>): (<span className="flex text-white hover:text-txtLowContrast">Light <SunIcon/></span>)}</button>
         </div>
     )

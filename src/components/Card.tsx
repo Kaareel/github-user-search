@@ -30,7 +30,6 @@ function Card(props: Props) {
                 const response = await fetch(`https://api.github.com/users/${props.user}`);
                 const data = await response.json();
                 setUserData(data);
-                console.log(data);
             } catch (error) {
                 console.error('Error fetching user data:', error);
             }
@@ -53,14 +52,22 @@ function Card(props: Props) {
         day = date.getDate();
         month = months[date.getMonth()];
         year = date.getFullYear();
-
-        console.log(`${day} ${month} ${year}`);
     }
 
     let bio: string | null = null;
     if (userData !== null) {
         if (userData.bio !== null) {
-            bio = userData.bio;
+            const description = userData.bio;
+
+            const lines = description ? description.split(/\r?\n/) : [description];
+
+            const filteredLines = lines.filter(line => typeof line === 'string' && line.trim() !== '');
+
+            const interestsList = filteredLines.map(line => {
+                const interest = line.trim();
+                return interest;
+            });
+            bio = interestsList.join(', ');
         } else {
             bio = "This profile has no bio";
         }
@@ -81,7 +88,7 @@ function Card(props: Props) {
             location = "Not Available";
         }
         if (userData.twitter_username !== null) {
-            twitter_username =  userData.twitter_username;
+            twitter_username = userData.twitter_username;
         } else {
             twitter_username = "Not Available";
         }
@@ -91,11 +98,11 @@ function Card(props: Props) {
             blog = "Not Available";
         }
     }
-
+    console.log(userData?.bio)
 
 
     return (
-        <div className={`${props.bgColor === 'Light' ? "bg-white text-txtLowContrast" : "bg-bgSecondary text-white"} py-8 px-6 rounded-2xl`}>
+        <div className={`${props.bgColor === 'Light' ? "bg-white text-txtLowContrast" : "bg-bgSecondary text-white"} py-8 px-6 rounded-2xl shadow-custom`}>
             {userData && (
                 <div className="flex">
                     <div className="mr-9">
@@ -108,18 +115,32 @@ function Card(props: Props) {
                                 <p>Joined {day} {month} {year}</p>
                             </div>
                             <p className={`${props.bgColor === 'Light' ? "text-Primary font-normal" : "text-Primary font-bold"}`}>@{userData.login}</p>
-                            <p className=" my-5">{bio}</p>
+                            <ul className="flex flex-col my-5">
+                                {bio !== null ? (
+                                    bio.split(',').map((interest, index) => (
+                                        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                                        <li key={index}>{interest}</li>
+                                    ))
+                                ) : (
+                                    <li>{bio}</li>
+                                )}
+                            </ul>
                         </div>
                         <div className={`${props.bgColor === 'Light' ? "bg-Light" : "bg-bgThird"} flex justify-between px-8 py-4 mb-9`}>
                             <p className="flex flex-col">repos <p className={`${props.bgColor === 'Light' ? "text-black font-bold text-2xl" : "text-2xl"}`}>{userData.public_repos}</p></p>
                             <p className="flex flex-col">Followers <p className={`${props.bgColor === 'Light' ? "text-black font-bold text-2xl" : "text-2xl"}`}>{userData.followers}</p> </p>
                             <p className="flex flex-col">Following <p className={`${props.bgColor === 'Light' ? "text-black font-bold text-2xl" : "text-2xl"}`}>{userData.following}</p></p>
                         </div>
-                        <div className="grid grid-cols-2 gap-y-4 justify-between">
-                            <p className="flex"><IconLocate /> <p className="ml-4">{location}</p></p>
-                            <p className="flex"> <IconTwitter /> <a href={`https://twitter.com//${userData.twitter_username}`} className="ml-4 hover:underline">{twitter_username}</a></p>
-                            <p className="flex"><IconLinkedin /> <a href="https://github.com/${}" className="ml-4 hover:underline">{blog}</a></p>
-                            <p className="flex"> <IconWork /> <a href={`https://github.com/${company}`} className="ml-4 hover:underline">{company}</a></p>
+                        <div className="flex justify-between ">
+                            <div className="flex flex-col gap-4">
+                                <p className="flex "><IconLocate /> {location}</p>
+                                <p className="flex "><IconLinkedin /> <a href="${blog}" className="ml-4 hover:underline">{blog}</a></p>
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <p className="flex "> <IconTwitter /> <a href={`https://twitter.com//${twitter_username}`} className="ml-4 hover:underline">{twitter_username}</a></p>
+                                <p className="flex "> <IconWork /> <a href={`https://github.com/${company}`} className="ml-4 hover:underline">{company}</a></p>
+                            </div>
+
                         </div>
                     </div>
                 </div>

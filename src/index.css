@@ -2,11 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+
+
 
 h2 {
   font-size: 1.625rem;
@@ -17,3 +14,5 @@ h2 {
 * {
   font-family: 'Space Mono', monospace;
 }
+
+

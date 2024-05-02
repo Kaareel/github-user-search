@@ -1,16 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Heading from "./components/Heading";
 import Form from "./components/Form";
-import { IconLocate, IconTwitter, IconWork } from "./components/Icon";
 import Card from "./components/Card";
 
 
 
 function App() {
   const [bgColor, setBgColor] = useState('Light');
-  const [user, setUser] = useState("kaareel");
-
-
+  const [user, setUser] = useState("mengasis");
 
   return (
     <div className={`h-screen bg-${bgColor} md:flex md:justify-center md:items-center`}>
