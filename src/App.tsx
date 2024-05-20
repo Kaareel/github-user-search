@@ -1,29 +1,59 @@
-import { SearchIcon, MoonIcon, SunIcon } from "./components/Icon";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Heading from "./components/Heading";
+import Form from "./components/Form";
+import Card from "./components/Card";
+import getUser from "./services/getUser";
+
+export interface UserData {
+  name: string;
+  login: string;
+  blog: string;
+  bio: string;
+  twitter_username: string;
+  created_at: string;
+  location: string;
+  followers: number;
+  following: number;
+  public_repos: number;
+  avatar_url: string;
+  company: string;
+}
+
+
 
 function App() {
-  const [bgColor, setBgColor] = useState('Light');
-  const ToggleColor = () => {
-    setBgColor(bgColor === 'Light' ? 'Dark' : 'Light');
-  };
+  const [query, setQuery] = useState("kaareel");
+  const [userData, setUserData] = useState<UserData | undefined>(undefined);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+		const fetchData = async () => {
+      if(!query) return
+			try {
+				const data = await getUser(query);
+				setUserData(data);
+
+			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+			} catch (error: any) {
+				if (error.message === "No Result") {
+					setErrorMessage("No Result");
+					return;
+				} 
+          setErrorMessage("System error");
+			}
+		};
+
+		fetchData();
+	}, [query]);
+
   return (
-    <div className={`h-screen bg-${bgColor}`}>
-      <div className="flex flex-col px-6 pt-8 pb-20 ">
-        <div className="flex justify-between items-center mx-5">
-          <h1 className="text-txtHighContrast text-3xl">devfinder</h1>
-          
-          <button className="p-[2.5px]" onClick={ToggleColor}>{bgColor === 'Light' ? (<span className="flex">Dark <MoonIcon/></span>): (<span className="flex">Light <SunIcon/></span>)}</button>
-        </div>
-        <form className="flex items-center bg-Secondary p-2 mt-9 mb-4 border rounded-2xl w-full">
-          <SearchIcon />
-          <input type="text" className="w-full py-[6px]"/>
-          <button className="bg-Primary border rounded-[10px] px-4 py-3 text-white">Search</button>
-        </form>
-        <div className="bg-Secondary py-8 px-6">
-          card
+      <div className='h-screen bg-Light dark:bg-Dark md:flex md:justify-center md:items-center'>
+        <div className="flex flex-col px-6 pt-8 pb-20">
+          <Heading/>
+          <Form query={query} setQuery={setQuery} errorMessage={errorMessage} />
+          <Card query={query} userData={userData} />
         </div>
       </div>
-    </div>
   );
 }
 
