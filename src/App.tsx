@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Heading from "./components/Heading";
 import Form from "./components/Form";
 import Card from "./components/Card";
+import getUser from "./services/getUser";
 
 export interface UserData {
   name: string;
@@ -18,40 +19,40 @@ export interface UserData {
   company: string;
 }
 
+
+
 function App() {
-  const [bgColor, setBgColor] = useState('Light');
   const [user, setUser] = useState("kaareel");
-  const [userData, setUserData] = useState<UserData | null>(null);
+  const [userData, setUserData] = useState<UserData | undefined>(undefined);
   const [errorMessage, setErrorMessage] = useState('');
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    const fetchData = async () => {
-        if (!user) return;
-        try {
-            const response = await fetch(`https://api.github.com/users/${user}`);
-            if (!response.ok){
-              setErrorMessage('No Result');
-              return;
-            }
-            setErrorMessage('');
-            const data = await response.json();
-            setUserData(data);
-        } catch (error) {
-          setErrorMessage('Error fetching data');
-        }
-    }
-    fetchData();
-}, [user, setErrorMessage]);
+		const fetchData = async () => {
+			try {
+				const data = await getUser(user);
+				setUserData(data);
+
+			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+			} catch (error: any) {
+				if (error.message === "No Result") {
+					setErrorMessage("No Result");
+					return;
+				} 
+          setErrorMessage("System error");
+			}
+		};
+
+		fetchData();
+	}, [user]);
 
   return (
-    <div className={`h-screen bg-${bgColor} md:flex md:justify-center md:items-center`}>
-      <div className="flex flex-col px-6 pt-8 pb-20">
-        <Heading bgColor={bgColor} setBgColor={setBgColor} />
-        <Form user={user} setUser={setUser} bgColor={bgColor} errorMessage={errorMessage}/>
-        <Card user={user} bgColor={bgColor} userData={userData} />
+      <div className='h-screen bg-Light dark:bg-Dark md:flex md:justify-center md:items-center'>
+        <div className="flex flex-col px-6 pt-8 pb-20">
+          <Heading/>
+          <Form user={user} setUser={setUser} errorMessage={errorMessage} />
+          <Card user={user} userData={userData} />
+        </div>
       </div>
-    </div>
   );
 }
 
