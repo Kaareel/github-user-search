@@ -22,14 +22,15 @@ export interface UserData {
 
 
 function App() {
-  const [user, setUser] = useState("kaareel");
+  const [query, setQuery] = useState("kaareel");
   const [userData, setUserData] = useState<UserData | undefined>(undefined);
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
 		const fetchData = async () => {
+      if(!query) return
 			try {
-				const data = await getUser(user);
+				const data = await getUser(query);
 				setUserData(data);
 
 			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -43,14 +44,14 @@ function App() {
 		};
 
 		fetchData();
-	}, [user]);
+	}, [query]);
 
   return (
       <div className='h-screen bg-Light dark:bg-Dark md:flex md:justify-center md:items-center'>
         <div className="flex flex-col px-6 pt-8 pb-20">
           <Heading/>
-          <Form user={user} setUser={setUser} errorMessage={errorMessage} />
-          <Card user={user} userData={userData} />
+          <Form query={query} setQuery={setQuery} errorMessage={errorMessage} />
+          <Card query={query} userData={userData} />
         </div>
       </div>
   );

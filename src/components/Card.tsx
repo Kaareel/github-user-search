@@ -2,7 +2,7 @@ import type { UserData } from '../App';
 import { IconLocate, IconTwitter, IconWork, IconLinkedin } from "./Icon";
 
 interface Props {
-    user: string;
+    query: string;
     userData?: UserData
 }
 
